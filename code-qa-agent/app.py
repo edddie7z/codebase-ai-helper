@@ -82,15 +82,26 @@ app = Flask(__name__)
 # Handle POST requests to /help
 def help():
     print("Received help request")
-    # Convert Gemini API response to JSON format
-    return jsonify({
-        "status": "success",
-        "answer": {
-            "explanation": "Placeholder for result from Gemini API",
-            "fileName": "ex.py",
-            "codeSnippet": "Ex: print('Hello, World!')"
-        }
-    })
+
+    # Get data from request
+    data = request.get_json()
+    question = data.get('question')
+
+    if not question:
+        return jsonify({"error": "No Question Provided"}), 400
+
+    print(f"Question: {question}")
+
+    # Invoke RAG chain
+    result = rag_chain.invoke(question)
+    print(f"AI Response: {result}")
+
+    # Parse AI response to JSON
+    try:
+        result_json = json.loads(result)
+        return jsonify(result_json)
+    except json.JSONDecodeError as e:
+        return jsonify({"error": "Failed to parse AI response as JSON"}), 500
 
 
 # Run app
