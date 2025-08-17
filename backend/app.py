@@ -2,6 +2,7 @@ import os
 import json
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.prompts import PromptTemplate
@@ -75,6 +76,7 @@ print("Finished initializing models and RAG Chain setup")
 
 # Initialize Flask app
 app = Flask(__name__)
+CORS(app)
 
 
 # /help API endpoint
