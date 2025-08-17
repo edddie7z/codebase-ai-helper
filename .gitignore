@@ -1,0 +1,21 @@
+# Virtual Environment
+venv/
+
+# Env Files
+.env
+
+# Local Vector DB
+chroma_db/
+
+# Temp Cloned Repo
+temp_repo/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS-specific files
+.DS_Store
+
+# Test file
+test.py
