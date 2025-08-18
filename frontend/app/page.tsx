@@ -1,148 +1,104 @@
 "use client";
 
-import { useState } from "react";
-
-// Interface for API result
-interface Result {
-  explanation: string;
-  fileName: string;
-  codeSnippet: string;
-}
+import { TypingAnimation } from "@/components/magicui/typing-animation";
+import { AuroraText } from "@/components/magicui/aurora-text";
+import Link from "next/link";
 
 export default function Home() {
-  // GitHub repo URL
-  const [repoUrl, setRepoUrl] = useState("");
-  // User question
-  const [question, setQuestion] = useState("");
-  // JSON object result from API
-  const [result, setResult] = useState<Result | null>(null);
-  // Loading state
-  const [isLoading, setIsLoading] = useState(false);
-  // Error messages
-  const [error, setError] = useState("");
-
-  // Event handler for form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    // Prevent reload on form submission
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-    setResult(null);
-
-    try {
-      const ingestResponse = await fetch("http://localhost:5000/ingest", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ repo_url: repoUrl }),
-      });
-
-      if (!ingestResponse.ok) {
-        const errData = await ingestResponse.json();
-        throw new Error(
-          errData.error || `Ingestion failed! status: ${ingestResponse.status}`
-        );
-      }
-      console.log("Ingestion successful!");
-
-      const res = await fetch("http://localhost:5000/ask", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ question: question }),
-      });
-
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || `HTTP error. status ${res.status}`);
-      }
-
-      const data: Result = await res.json();
-      setResult(data);
-    } catch (e: any) {
-      setError(e.message || "An error occurred while processing your request.");
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-50">
-      <div className="w-full max-w-2xl bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          AI Codebase Q&A Agent
-        </h1>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="repoUrl"
-              className="block text-sm font-medium text-gray-700"
+    <main className="bg-neutral-900 min-h-screen">
+      <div className="container mx-auto px-4 py-16">
+        {/* Simple Hero Card */}
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold text-amber-50 mb-8">
+            Welcome to{" "}
+            <AuroraText
+              colors={[
+                "#D97706",
+                "#F59E0B",
+                "#FCD34D",
+                "#F97316",
+                "#DC2626",
+                "#FBBF24",
+              ]}
+              speed={1.5}
             >
-              GitHub Repository URL (Future Feature)
-            </label>
-            <input
-              type="text"
-              id="repoUrl"
-              value={repoUrl}
-              onChange={(e) => setRepoUrl(e.target.value)}
-              placeholder="https://github.com/example/repo"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="question"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Your Question
-            </label>
-            <textarea
-              id="question"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder="e.g., What does the 'get_order_details' function do?"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              rows={3}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300"
+              ProgAssist
+            </AuroraText>
+          </h1>
+          <TypingAnimation
+            startOnView={true}
+            className="text-2xl font-semibold text-amber-50"
           >
-            {isLoading ? "Asking..." : "Ask AI"}
-          </button>
-        </form>
+            Your AI-powered codebase assistant
+          </TypingAnimation>
+        </div>
 
-        {/* Display Area for the Answer */}
-        {result && (
-          <div className="mt-8 p-4 border border-gray-200 rounded-lg bg-gray-50">
-            <h2 className="text-lg font-semibold text-gray-900">Answer:</h2>
-            <p className="mt-2 text-gray-700 whitespace-pre-wrap">
-              {result.explanation}
-            </p>
-            <div className="mt-4">
-              <p className="text-sm font-medium text-gray-600">
-                {result.fileName}
-              </p>
-              <pre className="mt-1 p-3 bg-gray-900 text-white rounded-md text-sm overflow-x-auto">
-                <code>{result.codeSnippet}</code>
-              </pre>
+        {/* Main Features Section */}
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-neutral-800 rounded-2xl p-12 shadow-2xl border border-neutral-700 backdrop-blur-sm">
+            {/* Badge */}
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mb-8 mx-auto">
+              <div className="w-2 h-2 bg-amber-400 rounded-full mr-2 animate-pulse"></div>
+              <span className="text-amber-400 text-sm font-medium">
+                AI-Powered Assistant
+              </span>
+            </div>
+
+            {/* Features Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+              <div className="bg-neutral-700/50 rounded-lg p-6 border border-neutral-600">
+                <div className="w-12 h-12 bg-amber-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  <span className="text-amber-400 text-xl">🤖</span>
+                </div>
+                <h3 className="text-amber-50 font-semibold mb-2">
+                  Smart Analysis
+                </h3>
+                <p className="text-amber-100/70 text-sm">
+                  Powered by Google's Gemini LLM
+                </p>
+              </div>
+
+              <div className="bg-neutral-700/50 rounded-lg p-6 border border-neutral-600">
+                <div className="w-12 h-12 bg-amber-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  <span className="text-amber-400 text-xl">⚡</span>
+                </div>
+                <h3 className="text-amber-50 font-semibold mb-2">
+                  Fast Navigation
+                </h3>
+                <p className="text-amber-100/70 text-sm">
+                  Quickly find and understand code patterns
+                </p>
+              </div>
+
+              <div className="bg-neutral-700/50 rounded-lg p-6 border border-neutral-600">
+                <div className="w-12 h-12 bg-amber-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  <span className="text-amber-400 text-xl">💡</span>
+                </div>
+                <h3 className="text-amber-50 font-semibold mb-2">
+                  Smart Insights
+                </h3>
+                <p className="text-amber-100/70 text-sm">
+                  Get contextual insights about your codebase
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link
+                href="/assistant"
+                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-neutral-900 font-semibold px-8 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg inline-block"
+              >
+                Get Started
+              </Link>
             </div>
           </div>
-        )}
 
-        {/* Display Area for Errors */}
-        {error && (
-          <div className="mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
-            <p>
-              <strong>Error:</strong> {error}
-            </p>
-          </div>
-        )}
+          {/* Background Decorations */}
+          <div className="absolute top-1/4 left-10 w-20 h-20 bg-amber-500/5 rounded-full blur-xl"></div>
+          <div className="absolute bottom-1/4 right-10 w-32 h-32 bg-amber-400/5 rounded-full blur-2xl"></div>
+        </div>
       </div>
     </main>
   );
