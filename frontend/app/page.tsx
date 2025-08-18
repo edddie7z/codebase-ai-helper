@@ -2,35 +2,69 @@
 
 import { useState } from "react";
 
-// 1. Define an interface for the shape of our answer object
-interface Answer {
+// Interface for API result
+interface Result {
   explanation: string;
   fileName: string;
   codeSnippet: string;
 }
 
 export default function Home() {
+  // GitHub repo URL
   const [repoUrl, setRepoUrl] = useState("");
+  // User question
   const [question, setQuestion] = useState("");
-
-  // 2. Tell useState that 'answer' can be of type Answer OR null
-  const [answer, setAnswer] = useState<Answer | null>(null);
+  // JSON object result from API
+  const [result, setResult] = useState<Result | null>(null);
+  // Loading state
   const [isLoading, setIsLoading] = useState(false);
+  // Error messages
   const [error, setError] = useState("");
 
+  // Event handler for form submission
   const handleSubmit = async (e: React.FormEvent) => {
+    // Prevent reload on form submission
     e.preventDefault();
-    console.log("Form submitted. We will call the API next.");
     setIsLoading(true);
-    setTimeout(() => {
-      setAnswer({
-        explanation:
-          "This is a placeholder explanation from the frontend. The real answer will come from the API.",
-        fileName: "placeholder.js",
-        codeSnippet: "console.log('UI test successful!');",
+    setError("");
+    setResult(null);
+
+    try {
+      const ingestResponse = await fetch("http://localhost:5000/ingest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ repo_url: repoUrl }),
       });
+
+      if (!ingestResponse.ok) {
+        const errData = await ingestResponse.json();
+        throw new Error(
+          errData.error || `Ingestion failed! status: ${ingestResponse.status}`
+        );
+      }
+      console.log("Ingestion successful!");
+
+      const res = await fetch("http://localhost:5000/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question: question }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || `HTTP error. status ${res.status}`);
+      }
+
+      const data: Result = await res.json();
+      setResult(data);
+    } catch (e: any) {
+      setError(e.message || "An error occurred while processing your request.");
+      console.error(e);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -40,14 +74,13 @@ export default function Home() {
           AI Codebase Q&A Agent
         </h1>
 
-        {/* Input Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="repoUrl"
               className="block text-sm font-medium text-gray-700"
             >
-              GitHub Repository URL
+              GitHub Repository URL (Future Feature)
             </label>
             <input
               type="text"
@@ -56,7 +89,6 @@ export default function Home() {
               onChange={(e) => setRepoUrl(e.target.value)}
               placeholder="https://github.com/example/repo"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              required
             />
           </div>
           <div>
@@ -86,16 +118,18 @@ export default function Home() {
         </form>
 
         {/* Display Area for the Answer */}
-        {answer && (
+        {result && (
           <div className="mt-8 p-4 border border-gray-200 rounded-lg bg-gray-50">
             <h2 className="text-lg font-semibold text-gray-900">Answer:</h2>
-            <p className="mt-2 text-gray-700">{answer.explanation}</p>
+            <p className="mt-2 text-gray-700 whitespace-pre-wrap">
+              {result.explanation}
+            </p>
             <div className="mt-4">
               <p className="text-sm font-medium text-gray-600">
-                {answer.fileName}
+                {result.fileName}
               </p>
               <pre className="mt-1 p-3 bg-gray-900 text-white rounded-md text-sm overflow-x-auto">
-                <code>{answer.codeSnippet}</code>
+                <code>{result.codeSnippet}</code>
               </pre>
             </div>
           </div>

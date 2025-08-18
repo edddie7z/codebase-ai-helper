@@ -1,66 +1,66 @@
 # Backend .gitignore
 # Virtual Environment
-code-qa-agent/venv/
+backend/venv/
 # Env Files
 
-code-qa-agent/.env
+backend/.env
 # Local Vector DB
 
-code-qa-agent/chroma_db/
+backend/chroma_db/
 # Temp Cloned Repo
 
-code-qa-agent/temp_repo/
+backend/temp_repo/
 # Python cache
 
-code-qa-agent/__pycache__/
-code-qa-agent/*.pyc
+backend/__pycache__/
+backend/*.pyc
 
 # Test files
-code-qa-agent/test.py
-code-qa-agent/api_tester.py
+backend/test.py
+backend/api_tester.py
 
 
 # Frontend .gitignore
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 # dependencies
-code-qa-frontend/node_modules/
-code-qa-frontend/.pnp
-code-qa-frontend/.pnp.*
-code-qa-frontend/.yarn/*
-!code-qa-frontend/.yarn/patches
-!code-qa-frontend/.yarn/plugins
-!code-qa-frontend/.yarn/releases
-!code-qa-frontend/.yarn/versions
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.*
+frontend/.yarn/*
+!frontend/.yarn/patches
+!frontend/.yarn/plugins
+!frontend/.yarn/releases
+!frontend/.yarn/versions
 
 # testing
-code-qa-frontend/coverage/
+frontend/coverage/
 
 # next.js
-code-qa-frontend/.next/
-code-qa-frontend/out/
+frontend/.next/
+frontend/out/
 
 # production
-code-qa-frontend/build/
+frontend/build/
 
 # misc
 .DS_Store
 *.pem
 
 # debug
-code-qa-frontend/npm-debug.log*
-code-qa-frontend/yarn-debug.log*
-code-qa-frontend/yarn-error.log*
-code-qa-frontend/.pnpm-debug.log*
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
 
 # env files
-code-qa-frontend/.env*
+frontend/.env*
 
 # vercel
-code-qa-frontend/.vercel/
+frontend/.vercel/
 
 # typescript
-code-qa-frontend/*.tsbuildinfo
-code-qa-frontend/next-env.d.ts
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
 
 #====================================================
 
