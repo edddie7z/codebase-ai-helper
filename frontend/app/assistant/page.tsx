@@ -123,7 +123,7 @@ export default function AssistantPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 disabled:from-amber-400 disabled:to-amber-500 text-neutral-900 font-semibold px-8 py-4 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg disabled:transform-none disabled:shadow-md"
+                className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 disabled:from-amber-400 disabled:to-amber-500 text-neutral-900 font-semibold px-8 py-4 rounded-lg transition-all duration-200 transform hover:scale-102 shadow-lg disabled:transform-none disabled:shadow-md"
               >
                 {isLoading ? "Processing..." : "Ask"}
               </button>
