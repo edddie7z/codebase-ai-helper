@@ -116,6 +116,9 @@ def ingest_repo(repoURL: str) -> None:
 app = Flask(__name__)
 CORS(app)
 
+# In-memory cache for query results
+query_cache = {}
+
 
 # API endpoint to handle ingestion of URL
 @app.route('/ingest', methods=['POST'])
@@ -128,7 +131,7 @@ def ingest():
     if not repo_url:
         return jsonify({"error": "No repository URL provided"}), 400
 
-    # Caching ingestion
+    # # Caching ingestion
     if repo_url == prev_ingest_url:
         print('Already ingested')
         return jsonify({"status": "success", "message": f"Repository {repo_url} is already ingested."})
@@ -150,6 +153,10 @@ def ask():
 
     if not question:
         return jsonify({"error": "No Question Provided"}), 400
+
+    # Query caching
+    if question in query_cache:
+        return jsonify(query_cache[question])
 
     try:
         db = Chroma(
@@ -174,6 +181,9 @@ def ask():
 
         # Invoke RAG chain
         result_json = rag_chain.invoke(question)
+
+        # Store result in cache
+        query_cache[question] = result_json
 
         return jsonify(result_json)
     except Exception as e:
